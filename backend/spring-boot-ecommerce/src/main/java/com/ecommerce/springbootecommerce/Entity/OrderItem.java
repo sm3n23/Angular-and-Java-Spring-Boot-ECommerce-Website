@@ -18,7 +18,7 @@ public class OrderItem {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "imag_url")
+    @Column(name = "image_url")
     private String imagUrl;
 
     @Column(name = "unit_price")
