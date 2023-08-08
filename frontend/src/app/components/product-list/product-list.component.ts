@@ -18,6 +18,7 @@ export class ProductListComponent implements OnInit {
   currentCategoryId : number = 1;
   previousCategoryId: number=1;
   searchMode: boolean = false;
+  categoryMode:boolean=false;
 
   previousKeyword:string="";
 
@@ -41,12 +42,18 @@ export class ProductListComponent implements OnInit {
   listProducts(){
 
     this.searchMode = this.route.snapshot.paramMap.has('keyword');
+    this.categoryMode=this.route.snapshot.paramMap.has('id');
+
 
     if(this.searchMode){
     this.handleSearchProducts();
 
-    }else{
+    }
+    if(this.categoryMode){
       this.handleListProducts();
+    }
+    else{
+      this.handleHomeProducts();
     }
 
   }
@@ -73,6 +80,21 @@ export class ProductListComponent implements OnInit {
                                                   }
                                                   );
 
+  }
+
+  handleHomeProducts(){
+    this.productService.getProductPaginate(this.thePageNumber -1,
+                                          this.thePageSize)
+                                          .subscribe(
+                                            data=>{
+                                              this.products = data._embedded.products,
+                                              this.thePageNumber= data.page.number +1,
+                                              this.thePageSize=data.page.size,
+                                              this.theTotalElements=data.page.totalElements;
+
+                                          
+                                            }
+                                          )
   }
   
   handleListProducts(){

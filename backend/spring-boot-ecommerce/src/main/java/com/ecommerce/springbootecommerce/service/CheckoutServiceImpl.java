@@ -18,8 +18,10 @@ public class CheckoutServiceImpl implements CheckoutService{
     private CustomerRepository customerRepository;
 
     @Autowired
-    public CheckoutServiceImpl(CustomerRepository customerRepository){
+    public CheckoutServiceImpl(CustomerRepository customerRepository)
+    {
         this.customerRepository=customerRepository;
+
     }
     @Override
     public PurchaseResponse placeOrder(Purchase purchase) {
@@ -41,6 +43,15 @@ public class CheckoutServiceImpl implements CheckoutService{
         //populate customer with order
 
         Customer customer = purchase.getCustomer();
+
+        String theEmail = customer.getEmail();
+
+        Customer customerFromDB = customerRepository.findByEmail(theEmail);
+
+        if(customerFromDB!=null){
+            customer=customerFromDB;
+        }
+
         customer.add(order);
 
         //save to database

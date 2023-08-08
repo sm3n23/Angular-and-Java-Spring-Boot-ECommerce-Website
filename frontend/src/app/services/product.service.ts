@@ -27,11 +27,12 @@ export class ProductService {
 
 
 
-  getProductList(categoryId:number): Observable<Product[]>{
+  getProductPaginate(thePage:number,
+                    theSize:number,): Observable<GetResponse>{
 
-    const Url =`${this.baseUrl}/search/findByCategoryId?id=${categoryId}`;
+    const Url =`${this.baseUrl}?page=${thePage}&size=${theSize}`;
 
-    return this.getProducts(Url);
+    return this.httpClient.get<GetResponse>(Url);
   }
 
   getProductListPaginate(thePage:number,

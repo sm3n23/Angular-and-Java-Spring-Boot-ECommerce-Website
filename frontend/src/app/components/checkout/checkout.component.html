@@ -312,13 +312,7 @@
                                     <option value="">Visa</option>
                                     <option value="">MasterCard</option>
                                 </select>
-                                <div *ngIf="creditCardType?.invalid && (creditCardType?.dirty || creditCardType?.touched)"
-                                    class="alert alert-danger mt-1">
-                                    <div *ngIf="creditCardType?.hasError('required')">
-                                        Card Type is required
-                                    </div>
-
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -358,7 +352,7 @@
                                         *ngIf="creditCardNumber && creditCardNumber.errors?.['required'] || creditCardNumber?.hasError('notOnlyWhitespace')">
                                         Number is required
                                     </div>
-                                    <div *ngIf="creditCardNumber && creditCardNumber.errors?.['minlength']">
+                                    <div *ngIf="creditCardNumber && creditCardNumber.errors?.['pattern']">
                                         Number must be at least 16 characters long
                                     </div>
                                 </div>
@@ -381,8 +375,8 @@
                                         *ngIf="creditCardCVV && creditCardCVV.errors?.['required'] || creditCardCVV?.hasError('notOnlyWhitespace')">
                                         CVV is required
                                     </div>
-                                    <div *ngIf="creditCardCVV && creditCardCVV.errors?.['minlength']">
-                                        CVV must 3 characters long
+                                    <div *ngIf="creditCardCVV?.hasError('pattern')">
+                                        CVV must 3 numbers long
                                     </div>
                                 </div>
                             </div>
