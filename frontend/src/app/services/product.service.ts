@@ -10,7 +10,7 @@ import { ProductCategory } from '../common/product-category';
 })
 export class ProductService {
   
-  
+  private products:Product[]=[]
   
   private baseUrl="http://localhost:8080/api/products";
   private categoryUrl ="http://localhost:8080/api/product_category";
@@ -70,13 +70,19 @@ export class ProductService {
   }
 
   
+
+  
   searchProducts(theKeyword:string): Observable<Product[]> {
     const searchUrl =`${this.baseUrl}/search/findByNameContaining?name=${theKeyword}`;
     
     return this.getProducts(searchUrl);
     }
+
+  
+
+  
     
-  }
+}
     
     interface GetResponse{
   _embedded :{

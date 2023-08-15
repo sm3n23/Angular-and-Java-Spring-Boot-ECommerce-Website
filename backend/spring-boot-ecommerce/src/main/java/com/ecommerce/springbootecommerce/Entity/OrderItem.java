@@ -19,7 +19,7 @@ public class OrderItem {
     private int id;
 
     @Column(name = "image_url")
-    private String imagUrl;
+    private String imageUrl;
 
     @Column(name = "unit_price")
     private BigDecimal unitPrice;
@@ -28,9 +28,26 @@ public class OrderItem {
     private int quantity;
 
     @Column(name = "product_id")
-    private Long productId;
+    private int productId;
+
+
+    
 
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
+
+    /*@ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    // Add this method to get the associated product
+    public Product getProduct() {
+        return product;
+    }*/
+
+
+
+
+
 }

@@ -13,6 +13,7 @@ export class CartService {
 
   totalPrice: Subject<number> = new BehaviorSubject<number>(0);
   totalQuantity: Subject<number> = new BehaviorSubject<number>(0);
+  
 
   storage: Storage = sessionStorage;
 
@@ -56,7 +57,15 @@ export class CartService {
     }
 
     if (alreadyExistingInCart) {
-      existingCartItem.quantity++;
+      let quantity:number=0;
+      existingCartItem.quantity+=10;
+      
+
+      
+
+      
+       
+
 
     } else {
       this.cartItems.push(theCartItem);
@@ -124,7 +133,7 @@ export class CartService {
 
     if(itemIndex >-1){
       this.cartItems.splice(itemIndex,1);
-      this.computeCartTotals();
+      
     }
     else{
       this.computeCartTotals();

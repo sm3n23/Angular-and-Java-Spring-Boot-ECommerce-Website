@@ -1,9 +1,6 @@
 package com.ecommerce.springbootecommerce.dto;
 
-import com.ecommerce.springbootecommerce.Entity.Address;
-import com.ecommerce.springbootecommerce.Entity.Customer;
-import com.ecommerce.springbootecommerce.Entity.Order;
-import com.ecommerce.springbootecommerce.Entity.OrderItem;
+import com.ecommerce.springbootecommerce.Entity.*;
 import lombok.Data;
 
 import java.util.Set;

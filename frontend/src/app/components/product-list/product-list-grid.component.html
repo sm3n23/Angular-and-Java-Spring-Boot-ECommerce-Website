@@ -15,7 +15,8 @@
                         </a>
 
                         <div class="price">{{product.unitPrice}}</div>
-                        <button (click)="addToCart(product)" class="btn btn-primary btn-sm">Add to cart</button>
+                        <button *ngIf="product.unitsInStock>0"  (click)="addToCart(product)" class="btn btn-primary btn-sm">Add to cart</button>
+                        <button *ngIf="product.unitsInStock==0"class="btn btn-primary btn-sm" disabled >Out of sctock</button>
 
                     </div>
 

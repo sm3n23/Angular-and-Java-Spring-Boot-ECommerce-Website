@@ -1,5 +1,6 @@
 package com.ecommerce.springbootecommerce.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -7,6 +8,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "product")
@@ -19,6 +22,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id",nullable = false)
+    @JsonIgnore
     private ProductCategory category;
 
 
@@ -50,6 +54,17 @@ public class Product {
     @Column(name = "last_updated")
     @UpdateTimestamp
     private Date lastUpdated;
+
+    /*@ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;*/
+
+
+    /*@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private Set<OrderItem> orderItems = new HashSet<>();*/
+
+
+
 
 
 }

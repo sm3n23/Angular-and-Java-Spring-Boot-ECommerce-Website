@@ -10,6 +10,8 @@ import { OrderItem } from 'src/app/common/order-item';
 import { Purchase } from 'src/app/common/purchase';
 import { CheckoutService } from 'src/app/services/checkout.service';
 import { Router } from '@angular/router';
+import { Product } from 'src/app/common/product';
+import { ProductService } from 'src/app/services/product.service';
 
 @Component({
   selector: 'app-checkout',
@@ -21,6 +23,11 @@ export class CheckoutComponent implements OnInit {
   checkoutFormGroup!: FormGroup;
   totalPrice: number = 0;
   totalQuantity: number = 0;
+  quantity:number=0;
+
+  products:Product[]=[];
+  product!:Product;
+  
 
 
   creditCardYears: number[] = [];
@@ -37,11 +44,13 @@ export class CheckoutComponent implements OnInit {
               private formSevice: FormService,
               private cartService: CartService,
               private checkoutService:CheckoutService,
-              private router : Router) { }
+              private router : Router,
+              private productService:ProductService) { }
 
 
 
   ngOnInit(): void {
+    
 
 
     this.reviewCartDetails();
@@ -105,6 +114,8 @@ export class CheckoutComponent implements OnInit {
     );
 
 
+    
+
   }
   reviewCartDetails() {
 
@@ -118,7 +129,9 @@ export class CheckoutComponent implements OnInit {
       data => {
         this.totalQuantity = data;
       }
-    )
+    );
+
+
   }
 
   get firstName() { return this.checkoutFormGroup.get('customer.firstName'); }
@@ -176,8 +189,12 @@ export class CheckoutComponent implements OnInit {
 
     const cartItems = this.cartService.cartItems;
 
-    let orderItems: OrderItem[] = cartItems.map(temp => new OrderItem(temp));
 
+    let orderItems: OrderItem[] = cartItems.map(tempCartItem => new OrderItem(tempCartItem));
+    
+
+ 
+    
 
     let purchase = new Purchase();
 
@@ -202,7 +219,14 @@ export class CheckoutComponent implements OnInit {
 
 
     purchase.order = order;
+  
     purchase.orderItems  = orderItems;
+
+
+
+    
+
+    
 
 
     this.checkoutService.placeOrder(purchase).subscribe({

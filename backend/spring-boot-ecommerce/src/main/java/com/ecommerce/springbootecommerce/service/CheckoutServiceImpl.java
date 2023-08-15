@@ -3,7 +3,9 @@ package com.ecommerce.springbootecommerce.service;
 import com.ecommerce.springbootecommerce.Entity.Customer;
 import com.ecommerce.springbootecommerce.Entity.Order;
 import com.ecommerce.springbootecommerce.Entity.OrderItem;
+import com.ecommerce.springbootecommerce.Entity.Product;
 import com.ecommerce.springbootecommerce.dao.CustomerRepository;
+import com.ecommerce.springbootecommerce.dao.ProductRepository;
 import com.ecommerce.springbootecommerce.dto.Purchase;
 import com.ecommerce.springbootecommerce.dto.PurchaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +18,28 @@ import java.util.UUID;
 public class CheckoutServiceImpl implements CheckoutService{
 
     private CustomerRepository customerRepository;
+    private ProductRepository productRepository;
+
+
 
     @Autowired
-    public CheckoutServiceImpl(CustomerRepository customerRepository)
+
+    public CheckoutServiceImpl(CustomerRepository customerRepository, ProductRepository productRepository)
     {
         this.customerRepository=customerRepository;
+        this.productRepository=productRepository;
+
 
     }
     @Override
     public PurchaseResponse placeOrder(Purchase purchase) {
+
+
+
+
         //get order info from dto
         Order order = purchase.getOrder();
+
 
         //generate tracking number
         String orderTrackingNumber = generateOrderTrackingNumber();
@@ -34,7 +47,28 @@ public class CheckoutServiceImpl implements CheckoutService{
 
         //populate order with order items
         Set<OrderItem> orderItems = purchase.getOrderItems();
+
+
+        for(OrderItem orderItem:orderItems) {
+            Long productId= (long) orderItem.getProductId();
+            Product product = productRepository.getById(productId);
+            int purchasedQuantity = orderItem.getQuantity();
+            int updateStock = product.getUnitsInStock() - purchasedQuantity;
+
+            System.out.println("number of stock :" + product.getUnitsInStock());
+
+
+            if (updateStock >= 0) {
+                product.setUnitsInStock(updateStock);
+                productRepository.save(product);
+            }
+
+        }
         orderItems.forEach(item->order.add(item));
+
+
+
+
 
         //populate order with address
         order.setBillingAddress(purchase.getBillingAddress());

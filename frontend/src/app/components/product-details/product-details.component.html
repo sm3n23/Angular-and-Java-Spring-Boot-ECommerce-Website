@@ -11,7 +11,8 @@
 
                                 <h3 class="mt-3">{{product.name}}</h3>
                                 <div class="price">{{product.unitPrice | currency}}</div>
-                                <a (click)="addToCart()" class="primary-btn mt-3">Add to cart</a>
+                                <a *ngIf="product.unitsInStock>0" (click)="addToCart()" class="primary-btn mt-3">Add to cart</a>
+                                <button *ngIf="product.unitsInStock == 0" disabled (click)="addToCart()" class="primary-btn mt-3">Out of stock</button>
 
                                 <hr>
                                 <h4 class="mt-5">Product Description</h4>
