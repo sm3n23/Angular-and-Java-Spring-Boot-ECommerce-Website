@@ -14,6 +14,8 @@ export class ProductDetailsComponent implements OnInit {
 
   product!:Product;
 
+  products:Product[]=[];
+
 
   constructor(private productServive:ProductService,
               private route:ActivatedRoute,
@@ -25,6 +27,8 @@ export class ProductDetailsComponent implements OnInit {
       this.handleProductDetails();
     }
     )  
+
+    this.handleRecommendedProducts();
   }
   handleProductDetails(){
     const productId: number = +this.route.snapshot.paramMap.get('id')!;
@@ -37,11 +41,28 @@ export class ProductDetailsComponent implements OnInit {
 
   }
 
+  handleRecommendedProducts(){
+    this.productServive.getRecommendedProducts().subscribe(
+      data=>{this.products=data._embedded.products}
+    )
+  }
+
+
+
   addToCart(){
 
     const cartItem = new CartItem(this.product);
 
     this.cartService.addToCart(cartItem);
+
+  }
+
+  addToCartList(product: Product){
+
+    
+    const theCartItem = new CartItem(product);
+
+    this.cartService.addToCart(theCartItem);
 
   }
   

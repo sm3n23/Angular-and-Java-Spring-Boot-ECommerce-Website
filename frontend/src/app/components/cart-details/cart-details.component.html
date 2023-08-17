@@ -47,8 +47,11 @@
                         <td></td>
                         <td></td>
                         <td style="font-weight: bold;">
-                            <p>Total Quantity: {{totalQuantity}}</p>
-                            <p>Total Price: {{totalPrice | currency }}</p>
+                            <p style="color:#0275d8 ;">Total Quantity: {{totalQuantity}}</p>
+                            <p *ngIf="totalQuantity==1"style="color:#0275d8 ;">Total Price: {{totalPrice | currency }} </p>
+                            <p *ngIf="totalQuantity>1"><s style="font-weight: 100;"><small>Total Price: {{totalPrice | currency }} </small></s> <br>
+                                <label style="color:#0275d8 ;">Discount Price: {{discountPrice | currency}}</label></p>
+                            
 
                             <button routerLink="/checkout" class="btn  m-2" style="background-color:#0275d8; color:aliceblue">CheckOut</button>
                         </td>

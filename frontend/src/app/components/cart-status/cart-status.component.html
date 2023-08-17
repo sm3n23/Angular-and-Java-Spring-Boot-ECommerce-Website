@@ -2,7 +2,9 @@
     <a routerLink="/cart-details">
         <div class="total">
 
-            {{totalPrice | currency}}
+            <label *ngIf="totalQuantity==0 || totalQuantity==1">{{totalPrice | currency}}</label>
+            <label *ngIf="totalQuantity>1">{{discountPrice | currency}}</label>
+            
 
             <span> {{totalQuantity}}</span>
 

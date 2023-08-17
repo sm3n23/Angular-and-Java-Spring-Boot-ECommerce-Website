@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CartItem } from 'src/app/common/cart-item';
 import { Product } from 'src/app/common/product';
@@ -6,13 +6,11 @@ import { CartService } from 'src/app/services/cart.service';
 import { ProductService } from 'src/app/services/product.service';
 
 @Component({
-  selector: 'app-product-list',
-  templateUrl: './product-list-grid.component.html',
-  styleUrls: ['./product-list.component.css']
+  selector: 'app-seller-products',
+  templateUrl: './seller-products.component.html',
+  styleUrls: ['./seller-products.component.css']
 })
-export class ProductListComponent implements OnInit {
-
-  
+export class SellerProductsComponent {
 
   products: Product[] = [];
   currentCategoryId : number = 1;
@@ -37,6 +35,8 @@ export class ProductListComponent implements OnInit {
 
       this.listProducts();
     })
+
+    
   }
 
   listProducts(){
@@ -147,7 +147,8 @@ export class ProductListComponent implements OnInit {
 
   addToCart(product: Product){
 
-    
+    console.log("name " +product.name + "price: " + product.unitPrice);
+
     const theCartItem = new CartItem(product);
 
     this.cartService.addToCart(theCartItem);
@@ -155,5 +156,21 @@ export class ProductListComponent implements OnInit {
   }
 
 
+
+  deleteProduct(productId:number){
+    if (confirm('Are you sure you want to delete this product?')){
+    this.productService.deleteProduct(productId).subscribe({
+      next:res=>{
+        console.log(`product deleted seccussfully ${res}`)
+      },
+      error:err=>{
+        console.log(`there was an error ${err.message}`)
+      }
+      }
+    )}
+
+    this,this.listProducts();
+  }
+  
 
 }

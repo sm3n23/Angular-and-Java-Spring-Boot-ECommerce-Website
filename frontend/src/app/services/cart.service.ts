@@ -13,6 +13,7 @@ export class CartService {
 
   totalPrice: Subject<number> = new BehaviorSubject<number>(0);
   totalQuantity: Subject<number> = new BehaviorSubject<number>(0);
+  discountPrice: Subject<number> =new BehaviorSubject<number>(0);
   
 
   storage: Storage = sessionStorage;
@@ -57,16 +58,9 @@ export class CartService {
     }
 
     if (alreadyExistingInCart) {
-      let quantity:number=0;
-      existingCartItem.quantity+=10;
+
+      existingCartItem.quantity++;
       
-
-      
-
-      
-       
-
-
     } else {
       this.cartItems.push(theCartItem);
     }
@@ -79,16 +73,27 @@ export class CartService {
 
     let totalPriceValue: number = 0;
     let totalQuantityValue: number = 0;
+    let discountPrice:number=0;
 
     for (let tempCartItem of this.cartItems) {
       totalPriceValue += tempCartItem.quantity * tempCartItem.unitPrice;
       totalQuantityValue += tempCartItem.quantity;
+
+      }
+
+    if(totalQuantityValue >=2 &&totalQuantityValue <=3){
+      discountPrice = totalPriceValue - totalPriceValue/20
+    }else if(totalQuantityValue >=4 && totalQuantityValue <=5){
+      discountPrice = totalPriceValue - totalPriceValue/10
+    }else if (totalQuantityValue >=6){
+      discountPrice = totalPriceValue - totalPriceValue*(15/100)
     }
 
     //publish values
 
     this.totalPrice.next(totalPriceValue);
     this.totalQuantity.next(totalQuantityValue);
+    this.discountPrice.next(discountPrice);
 
 
     //debug
@@ -133,6 +138,7 @@ export class CartService {
 
     if(itemIndex >-1){
       this.cartItems.splice(itemIndex,1);
+      this.computeCartTotals();
       
     }
     else{

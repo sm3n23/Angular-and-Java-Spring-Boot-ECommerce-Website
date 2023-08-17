@@ -1,51 +1,57 @@
 <div class="main-content">
+
     <div class="section-content section-content-p30">
         <div class="container-fluid">
+            <div class="row pt-0">
+                <div class="col-md-10"></div>
+                <div class="col-md-2">
+                    <button routerLink="/seller/create" class=" btn btn-primary mt-0 mb-5">Add Product</button>
+                </div>
+            </div>
             <div class="row">
 
-                <div *ngFor="let product of products" class="col-md-3" >
+                <div *ngFor="let product of products" class="col-md-3">
                     <div class="product-box">
-                        
-                        <a routerLink="/products/{{product.id}}">
+
+                        <a >
                             <img src="{{product.imgUrl}}" alt="">
                         </a>
 
-                        <a routerLink="/products/{{product.id}}">
+                        <a>
                             <h1>{{product.name}}</h1>
                         </a>
 
                         <div class="price">{{product.unitPrice |currency}}</div>
-                        <button *ngIf="product.unitsInStock>0"  (click)="addToCart(product)" class="btn btn-primary btn-sm">Add to cart</button>
-                        <button *ngIf="product.unitsInStock==0"class="btn btn-primary btn-sm" disabled >Out of sctock</button>
+                        <a routerLink="/seller/product/{{product.id}}" class="btn  btn-secondary btn-sm m-2">Update</a>
+                        <button class="btn btn-danger btn-sm m-2" routerLink="/seller"
+                            (click)="deleteProduct(+product.id)">Delete</button>
 
                     </div>
 
 
                 </div>
 
-                <div *ngIf="products?.length == 0" class="alert alert-warning col-md-12" role="alert" >No products found.</div>
+                <div *ngIf="products?.length == 0" class="alert alert-warning col-md-12" role="alert">No products found.
+                </div>
 
             </div>
-            
+
             <div class="footer-pagination">
                 <div class="row">
                     <div class="col-md-6"></div>
 
                     <div class="col-md-6">
                         <div class="row">
-                            <div class="col-md-9" style="padding-left: 30%;" >
-                                <ngb-pagination [(page)]="thePageNumber"
-                                                [pageSize]="thePageSize"
-                                                [collectionSize]="theTotalElements"
-                                                [maxSize]=3
-                                                (pageChange)="listProducts()">
+                            <div class="col-md-9" style="padding-left: 30%;">
+                                <ngb-pagination [(page)]="thePageNumber" [pageSize]="thePageSize"
+                                    [collectionSize]="theTotalElements" [maxSize]=3 (pageChange)="listProducts()">
 
                                 </ngb-pagination>
                             </div>
-                            <div class="col-md-3 mt-2" style="text-align: right;"> 
+                            <div class="col-md-3 mt-2" style="text-align: right;">
                                 <span class="mr-2">Page Size </span>
                                 <select #pageSelect (change)="updatePageSize(pageSelect.value)">
-                                    <option >5</option>
+                                    <option>5</option>
                                     <option selected="true">10</option>
                                     <option>20</option>
                                     <option>50</option>
@@ -59,4 +65,4 @@
 
         </div>
     </div>
-</div>                
+</div>

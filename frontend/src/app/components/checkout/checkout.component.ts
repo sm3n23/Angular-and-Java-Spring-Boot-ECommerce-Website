@@ -24,11 +24,14 @@ export class CheckoutComponent implements OnInit {
   totalPrice: number = 0;
   totalQuantity: number = 0;
   quantity:number=0;
+  discountPrice:number=0;
 
   products:Product[]=[];
   product!:Product;
   
 
+  selectedPaymentOption: string = '';
+  showBillingAddress: boolean = true;
 
   creditCardYears: number[] = [];
   creditCardMonths: number[] = [];
@@ -44,13 +47,15 @@ export class CheckoutComponent implements OnInit {
               private formSevice: FormService,
               private cartService: CartService,
               private checkoutService:CheckoutService,
-              private router : Router,
-              private productService:ProductService) { }
+              private router : Router) { }
 
 
 
   ngOnInit(): void {
+  
     
+    
+
 
 
     this.reviewCartDetails();
@@ -64,6 +69,9 @@ export class CheckoutComponent implements OnInit {
         email: new FormControl(theEmail,
           [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$')])
 
+      }),
+      paymentMethode:this.formbuilder.group({
+        PaymentMethodes: [''],
       }),
       shippingAddress: this.formbuilder.group({
         street: new FormControl('', [Validators.required, Validators.minLength(2), ShopValidators.notOnlyWhitespace]),
@@ -117,6 +125,18 @@ export class CheckoutComponent implements OnInit {
     
 
   }
+
+
+  onPaymentOptionChange(payment: string) {
+    this.selectedPaymentOption = payment;
+
+    console.log(`option: ${this.selectedPaymentOption}`)
+
+    this.showBillingAddress = this.selectedPaymentOption !== 'Cash delivery';
+
+    
+  }
+  
   reviewCartDetails() {
 
     this.cartService.totalPrice.subscribe(
@@ -125,11 +145,17 @@ export class CheckoutComponent implements OnInit {
       }
     );
 
+
+
     this.cartService.totalQuantity.subscribe(
       data => {
         this.totalQuantity = data;
       }
     );
+
+    this.cartService.discountPrice.subscribe(
+      data=>this.discountPrice=data
+    )
 
 
   }
@@ -282,29 +308,34 @@ export class CheckoutComponent implements OnInit {
   }
   getStates(formGroupName: string) {
     const formGroup = this.checkoutFormGroup.get(formGroupName);
-
-    const countryCode = formGroup?.value.country.code;
-    const countryName = formGroup?.value.country.name;
-
-    console.log(`countryCode: ${countryCode}`)
-    console.log(`country name: ${countryName}`)
-
+  
+    if (!formGroup) {
+      return;
+    }
+  
+    const countryControl = formGroup.get('country');
+    if (!countryControl) {
+      return;
+    }
+  
+    const countryCode = countryControl.value.code;
+    const countryName = countryControl.value.name;
+  
+    console.log(`countryCode: ${countryCode}`);
+    console.log(`country name: ${countryName}`);
+  
     this.formSevice.getStates(countryCode).subscribe(
       data => {
-        if (formGroupName === "shippingAddress") {
-          this.shippingAdressStates = data;
-        }
-        else {
-          this.billingAdressStates = data;
-        }
-
-        //first item by default
-
-        formGroup?.get('state')?.setValue(data[0]);
+        const statesArray = (formGroupName === 'shippingAddress') ? 'shippingAdressStates' : 'billingAdressStates';
+  
+        this[statesArray] = data;
+  
+        // Set the first state by default
+        formGroup.get('state')?.setValue(data[0]);
       }
-    )
-
+    );
   }
+  
 
 }
 

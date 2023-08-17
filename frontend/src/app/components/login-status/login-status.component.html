@@ -2,10 +2,13 @@
     <div class="au-input" *ngIf="!isAuthenticated && userFullName">
         welcome back {{userFullName}}
     </div>
-    <button *ngIf="!isAuthenticated" routerLink="/login" class="au-btn-submit" >Login</button>
+    <!-- <button *ngIf="!isAuthenticated" routerLink="/login" class="au-btn-submit" >Login</button> -->
     <button *ngIf="isAuthenticated" (click)="logOut()" class="au-btn-submit" >Logout</button>
     <button *ngIf="isAuthenticated" routerLink="/members" class="au-btn-submit" >members</button>
 
     <button *ngIf="isAuthenticated" routerLink="/order-history" class="au-btn-submit" >Orders</button>
+
+    <button routerLink="/seller" class="au-btn-submit" >seller</button>
+    
 
 </div>
