@@ -13,9 +13,13 @@ import { ProductService } from 'src/app/services/product.service';
 export class ProductDetailsComponent implements OnInit {
 
   product!:Product;
-
   products:Product[]=[];
 
+  thePageNumber:number = 1;
+  thePageSize:number =10;
+  theTotalElements:number=0;
+
+  currentCategoryId : number = 1;
 
   constructor(private productServive:ProductService,
               private route:ActivatedRoute,
@@ -36,15 +40,43 @@ export class ProductDetailsComponent implements OnInit {
     this.productServive.getProduct(productId).subscribe(
       data=>{
         this.product=data;
+        
       }
     )
 
+    
   }
 
   handleRecommendedProducts(){
     this.productServive.getRecommendedProducts().subscribe(
       data=>{this.products=data._embedded.products}
     )
+  }
+
+  handleListProducts(){ 
+  const idParam = this.route.snapshot.paramMap.get('categotyId');
+    if (idParam !== null) {
+        this.currentCategoryId = +idParam;
+    } else {
+        this.currentCategoryId = 1;
+    }
+    
+    
+
+    console.log(`current Catergoty Id= ${this.currentCategoryId}, the Page number =${this.thePageNumber}`)
+
+    this.productServive.getProductListPaginate(this.thePageNumber -1,
+                                                this.thePageSize,
+                                                this.currentCategoryId)
+                                                .subscribe(
+                                                data => {
+                                                  this.products = data._embedded.products,
+                                                  this.thePageNumber= data.page.number +1,
+                                                  this.thePageSize=data.page.size,
+                                                  this.theTotalElements=data.page.totalElements;
+                                                }
+                                                );
+
   }
 
 
@@ -65,6 +97,9 @@ export class ProductDetailsComponent implements OnInit {
     this.cartService.addToCart(theCartItem);
 
   }
+
+  
+  
   
 
 }

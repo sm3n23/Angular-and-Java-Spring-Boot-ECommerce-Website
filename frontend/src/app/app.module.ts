@@ -38,6 +38,7 @@ import { OrderHistoryComponent } from './components/order-history/order-history.
 import { SellerComponent } from './components/seller/seller.component';
 import { SellerProductsComponent } from './components/seller-products/seller-products.component';
 import { UpdateProductsComponent } from './components/update-products/update-products.component';
+import { HomeComponent } from './components/home/home.component';
 
 const oktaConfig = myAppConfig.oidc;
 const oktaAuth = new OktaAuth(oktaConfig);
@@ -52,6 +53,10 @@ function sendToLoginPage(oktaAuth:OktaAuth,injector:Injector){
 
 
 const routes: Routes = [
+
+  {path:'home',component:HomeComponent},
+
+
   {path:'seller/product/:id',component:UpdateProductsComponent},
   {path:'seller',component:SellerProductsComponent},
   {path:'seller/create',component:SellerComponent},
@@ -69,8 +74,8 @@ const routes: Routes = [
   {path:'category/:id',component:ProductListComponent},
   {path:"category",component:ProductListComponent},
   {path:"products",component:ProductListComponent},
-  {path:"",redirectTo:'/products',pathMatch:'full'},
-  {path:"**",redirectTo:'/products',pathMatch:'full'}
+  {path:"",redirectTo:'/home',pathMatch:'full'},
+  {path:"**",redirectTo:'/home',pathMatch:'full'}
 ];
 
 @NgModule({
@@ -91,6 +96,7 @@ const routes: Routes = [
     SellerComponent,
     SellerProductsComponent,
     UpdateProductsComponent,
+    HomeComponent,
     
   ],
   imports: [

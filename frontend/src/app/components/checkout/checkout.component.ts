@@ -12,6 +12,8 @@ import { CheckoutService } from 'src/app/services/checkout.service';
 import { Router } from '@angular/router';
 import { Product } from 'src/app/common/product';
 import { ProductService } from 'src/app/services/product.service';
+import { CartItem } from 'src/app/common/cart-item';
+import { Address } from 'src/app/common/address';
 
 @Component({
   selector: 'app-checkout',
@@ -25,6 +27,7 @@ export class CheckoutComponent implements OnInit {
   totalQuantity: number = 0;
   quantity:number=0;
   discountPrice:number=0;
+  shippingPrice:number = 10;
 
   products:Product[]=[];
   product!:Product;
@@ -38,10 +41,22 @@ export class CheckoutComponent implements OnInit {
 
   countries: Country[] = [];
 
+  cartItems: CartItem[]=[];
+
   shippingAdressStates: State[] = [];
   billingAdressStates: State[] = [];
 
   storage:Storage = sessionStorage;
+
+
+  nullBillingAddress: Address = {
+    street: '',
+    city: '',
+    state: '',
+    country: '',
+    zipCode:''
+    // ... Other properties
+  };
 
   constructor(private formbuilder: FormBuilder,
               private formSevice: FormService,
@@ -54,7 +69,7 @@ export class CheckoutComponent implements OnInit {
   ngOnInit(): void {
   
     
-    
+    this.listCartDetails();
 
 
 
@@ -81,17 +96,17 @@ export class CheckoutComponent implements OnInit {
         zipCode: new FormControl('', [Validators.required, Validators.minLength(2), ShopValidators.notOnlyWhitespace]),
       }),
       billingAddress: this.formbuilder.group({
-        street: new FormControl('', [Validators.required, Validators.minLength(2), ShopValidators.notOnlyWhitespace]),
-        city: new FormControl('', [Validators.required, Validators.minLength(2), ShopValidators.notOnlyWhitespace]),
-        state: new FormControl('', [Validators.required]),
-        country: new FormControl('', [Validators.required]),
-        zipCode: new FormControl('', [Validators.required, Validators.minLength(2), ShopValidators.notOnlyWhitespace]),
+        street: new FormControl(''),
+        city: new FormControl(''),
+        state: new FormControl(''),
+        country: new FormControl(''),
+        zipCode: new FormControl(''),
       }),
       creditCard: this.formbuilder.group({
         cardType: [''],
-        nameOnCard: new FormControl('', [Validators.required, Validators.minLength(2), ShopValidators.notOnlyWhitespace]),
-        cardNumber: new FormControl('', [Validators.required, Validators.pattern('[0-9]{16}')]),
-        securityCode: new FormControl('', [Validators.required, Validators.pattern('[0-9]{3}')]),
+        nameOnCard: new FormControl('', [Validators.minLength(2)]),
+        cardNumber: new FormControl('', [Validators.pattern('[0-9]{16}')]),
+        securityCode: new FormControl('', [Validators.pattern('[0-9]{3}')]),
         expirationMonth: [''],
         expirationYear: [''],
       })
@@ -126,8 +141,35 @@ export class CheckoutComponent implements OnInit {
 
   }
 
+  listCartDetails() {
+
+    this.cartItems = this.cartService.cartItems;
+
+
+    this.cartService.totalPrice.subscribe(
+      data=> this.totalPrice = data
+    )
+
+    
+
+
+    this.cartService.totalQuantity.subscribe(
+      data => this.totalQuantity =data
+    )
+
+    this.cartService.discountPrice.subscribe(
+      data=>{
+        this.discountPrice = data;
+      }
+    )
+
+    this.cartService.computeCartTotals();
+
+  }
+
 
   onPaymentOptionChange(payment: string) {
+
     this.selectedPaymentOption = payment;
 
     console.log(`option: ${this.selectedPaymentOption}`)
@@ -199,6 +241,9 @@ export class CheckoutComponent implements OnInit {
     }
   }
 
+  
+  
+
   onSubmit() {
 
 
@@ -210,7 +255,12 @@ export class CheckoutComponent implements OnInit {
 
     let order = new Order();
 
+    if(this.discountPrice){
+      order.totalPrice=this.discountPrice +this.shippingPrice;
+
+    }else{
     order.totalPrice = this.totalPrice;
+    }
     order.totalQuantity = this.totalQuantity;
 
     const cartItems = this.cartService.cartItems;
@@ -227,20 +277,41 @@ export class CheckoutComponent implements OnInit {
     purchase.customer = this.checkoutFormGroup.controls['customer'].value;
 
     purchase.shippingAddress = this.checkoutFormGroup.controls['shippingAddress'].value;
+  
     const shippingState: State = JSON.parse(JSON.stringify(purchase.shippingAddress.state))
     const shippingCountry: Country = JSON.parse(JSON.stringify(purchase.shippingAddress.country))
     
     purchase.shippingAddress.state = shippingState.name;
+    
     purchase.shippingAddress.country = shippingCountry.name;
     
+    console.log(`value: ${this.selectedPaymentOption}`)
 
-
-    purchase.billingAddress = this.checkoutFormGroup.controls['billingAddress'].value;
-    const billingState: State = JSON.parse(JSON.stringify(purchase.billingAddress.state))
-    const billingCountry: Country = JSON.parse(JSON.stringify(purchase.billingAddress.country))
     
-    purchase.billingAddress.state = billingState.name;
-    purchase.billingAddress.country = billingCountry.name;
+
+    if(this.selectedPaymentOption === "Cash delivery"){
+
+      /* purchase.billingAddress.street ='';
+      purchase.billingAddress.city='';
+      purchase.billingAddress.state='';
+      purchase.billingAddress.country='';
+      purchase.billingAddress.zipCode=''; */
+
+      purchase.billingAddress = this.nullBillingAddress;
+      
+
+
+    }else{
+
+      purchase.billingAddress = this.checkoutFormGroup.controls['billingAddress'].value;
+      const billingState: State = JSON.parse(JSON.stringify(purchase.billingAddress.state))
+      const billingCountry: Country = JSON.parse(JSON.stringify(purchase.billingAddress.country))
+    
+      purchase.billingAddress.state = billingState.name;
+      purchase.billingAddress.country = billingCountry.name;
+    }
+
+    
     
 
 

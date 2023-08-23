@@ -92,6 +92,8 @@ export class ProductListComponent implements OnInit {
                                               this.thePageSize=data.page.size,
                                               this.theTotalElements=data.page.totalElements;
 
+                                              console.log(this.products.map(temp=>temp.imgUrl))
+
                                           
                                             }
                                           )

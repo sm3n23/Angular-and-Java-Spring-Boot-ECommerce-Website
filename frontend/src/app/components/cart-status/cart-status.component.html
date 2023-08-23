@@ -1,4 +1,4 @@
-<div class="cart-area d-n">
+<!-- <div class="cart-area d-n">
     <a routerLink="/cart-details">
         <div class="total">
 
@@ -12,4 +12,20 @@
         </div> <i class="fa fa-shopping-cart" aria-hidden="true"></i>
 
     </a>
-</div>
+</div> -->
+
+
+
+
+<a routerLink="/cart-details" class="btn border">
+  <i class="fas fa-shopping-cart text-primary"></i>
+  <span class="badge">
+    k
+  </span>
+  <label *ngIf="totalQuantity==0 || totalQuantity==1">{{totalPrice | currency}}</label>
+
+  <label *ngIf="totalQuantity>1">{{discountPrice | currency}}</label>
+
+  <label> | </label>
+  <span> {{totalQuantity}}</span>
+</a>

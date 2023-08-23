@@ -1,68 +1,132 @@
-<div class="main-content">
 
-    <div class="section-content section-content-p30">
-        <div class="container-fluid">
-            <div class="row pt-0">
-                <div class="col-md-10"></div>
-                <div class="col-md-2">
-                    <button routerLink="/seller/create" class=" btn btn-primary mt-0 mb-5">Add Product</button>
-                </div>
-            </div>
-            <div class="row">
-
-                <div *ngFor="let product of products" class="col-md-3">
-                    <div class="product-box">
-
-                        <a >
-                            <img src="{{product.imgUrl}}" alt="">
-                        </a>
-
-                        <a>
-                            <h1>{{product.name}}</h1>
-                        </a>
-
-                        <div class="price">{{product.unitPrice |currency}}</div>
-                        <a routerLink="/seller/product/{{product.id}}" class="btn  btn-secondary btn-sm m-2">Update</a>
-                        <button class="btn btn-danger btn-sm m-2" routerLink="/seller"
-                            (click)="deleteProduct(+product.id)">Delete</button>
-
-                    </div>
-
-
-                </div>
-
-                <div *ngIf="products?.length == 0" class="alert alert-warning col-md-12" role="alert">No products found.
-                </div>
-
-            </div>
-
-            <div class="footer-pagination">
-                <div class="row">
-                    <div class="col-md-6"></div>
-
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-9" style="padding-left: 30%;">
-                                <ngb-pagination [(page)]="thePageNumber" [pageSize]="thePageSize"
-                                    [collectionSize]="theTotalElements" [maxSize]=3 (pageChange)="listProducts()">
-
-                                </ngb-pagination>
-                            </div>
-                            <div class="col-md-3 mt-2" style="text-align: right;">
-                                <span class="mr-2">Page Size </span>
-                                <select #pageSelect (change)="updatePageSize(pageSelect.value)">
-                                    <option>5</option>
-                                    <option selected="true">10</option>
-                                    <option>20</option>
-                                    <option>50</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
+<!-- Page Header Start -->
+<div class="container-fluid bg-secondary mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3">Seller</h1>
+        <div class="d-inline-flex">
+            <p class="m-0"><a routerLink="/home">Home</a></p>
+            <p class="m-0 px-2">-</p>
+            <p class="m-0">Seller</p>
         </div>
     </div>
 </div>
+<!-- Page Header End -->
+
+
+<!-- Shop Start -->
+<div class="container-fluid pt-5">
+    <div class="row px-xl-5">
+
+
+        
+
+        <!-- Shop Product Start -->
+        <div class="col-lg-12 col-md-12">
+            <div class="row pb-3">
+                <div class="col-12 pb-1">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <form action="">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search by name">
+                                <div class="input-group-append">
+                                    <span class="input-group-text bg-transparent text-primary">
+                                        <i class="fa fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="dropdown ml-4">
+                            
+                            <button routerLink="/seller/create" class=" btn btn-primary mt-0 mb-5" aria-haspopup="true" aria-expanded="false">Add Product</button>
+                            
+                            
+                                
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId">
+                                <a class="dropdown-item" href="#">Latest</a>
+                                <a class="dropdown-item" href="#">Popularity</a>
+                                <a class="dropdown-item" href="#">Best Rating</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+
+                    <div *ngFor="let product of products" class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                        <div class="card product-item border-0 mb-4">
+
+                            <a class="card-header product-img position-relative overflow-hidden bg-transparent border p-0"
+                                routerLink="/products/{{product.id}}">
+                                <img class="img-fluid w-100" src="../{{product.imgUrl}}" alt="">
+                            </a>
+
+                            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                <a routerLink="/products/{{product.id}}">
+                                    <h6 class="text-truncate mb-3">{{product.name}}</h6>
+                                </a>
+                                <div class="d-flex justify-content-center">
+                                    {{product.unitPrice |currency}}</div>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between bg-light border">
+                                <a routerLink="/seller/product/{{product.id}}" class="btn  btn-secondary  m-2">Update</a>
+                                <button class="btn btn-danger  m-2" routerLink="/seller"
+                                (click)="deleteProduct(+product.id)">Delete</button>
+                                 
+
+                                
+                            </div>
+                            <span class="card-footer d-flex justify-content-between bg-light border" *ngIf="product.unitsInStock==0" class="btn btn-primary btn-sm" disabled>Out of stock</span>
+
+
+                            <!-- <button *ngIf="product.unitsInStock>0" (click)="addToCart(product)"
+                                class="btn btn-primary btn-sm">Add to cart</button>
+                            <button *ngIf="product.unitsInStock==0" class="btn btn-primary btn-sm" disabled>Out of
+                                sctock</button> -->
+
+                        </div>
+
+
+                    </div>
+
+                    <div *ngIf="products?.length == 0" class="alert alert-warning col-md-12" role="alert">No products
+                        found.</div>
+
+                </div>
+
+                <div class="footer-pagination">
+                    <div class="row">
+                        <div class="col-md-6"></div>
+    
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-9" style="padding-left: 30%;" >
+                                    <ngb-pagination [(page)]="thePageNumber"
+                                                    [pageSize]="thePageSize"
+                                                    [collectionSize]="theTotalElements"
+                                                    [maxSize]=5
+                                                    (pageChange)="listProducts()">
+    
+                                    </ngb-pagination>
+                                </div>
+                                <div class="col-md-3 mt-2" style="text-align: right;"> 
+                                    <span class="mr-2">Page Size </span>
+                                    <select #pageSelect (change)="updatePageSize(pageSelect.value)">
+                                        <option >5</option>
+                                        <option selected="true">10</option>
+                                        <option>20</option>
+                                        <option>50</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+        <!-- Shop Product End -->
+    </div>
+</div>
+<!-- Shop End -->
