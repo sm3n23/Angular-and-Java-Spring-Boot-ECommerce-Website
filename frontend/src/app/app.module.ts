@@ -39,6 +39,8 @@ import { SellerComponent } from './components/seller/seller.component';
 import { SellerProductsComponent } from './components/seller-products/seller-products.component';
 import { UpdateProductsComponent } from './components/update-products/update-products.component';
 import { HomeComponent } from './components/home/home.component';
+import { RegisterComponent } from './components/register/register.component';
+import { LoginUserComponent } from './components/login-user/login-user.component';
 
 const oktaConfig = myAppConfig.oidc;
 const oktaAuth = new OktaAuth(oktaConfig);
@@ -56,22 +58,24 @@ const routes: Routes = [
 
   {path:'home',component:HomeComponent},
 
-
+  {path:'register/seller',component:RegisterComponent},
+  {path:'register/customer',component:RegisterComponent},
   {path:'seller/product/:id',component:UpdateProductsComponent},
-  {path:'seller',component:SellerProductsComponent},
-  {path:'seller/create',component:SellerComponent},
+  {path:'seller/:sellerId',component:SellerProductsComponent},
+  {path:'seller/:id/create',component:SellerComponent},
   {path:'order-history',component:OrderHistoryComponent},
   {path:'members',component:MembersPageComponent, canActivate:[OktaAuthGuard],
                   data:{onAuthRequired:sendToLoginPage} },
   
   {path:'login/callback',component:OktaCallbackComponent},
-  {path:'login',component:LoginComponent},
+  {path:'login',component:LoginUserComponent},
   
   {path:'checkout',component:CheckoutComponent},
   {path:'cart-details',component:CartDetailsComponent},
   {path:'products/:id',component:ProductDetailsComponent},
   {path:'search/:keyword',component:ProductListComponent}, 
   {path:'category/:id',component:ProductListComponent},
+  {path:'seller/category/:id',component:SellerProductsComponent},
   {path:"category",component:ProductListComponent},
   {path:"products",component:ProductListComponent},
   {path:"",redirectTo:'/home',pathMatch:'full'},
@@ -97,6 +101,8 @@ const routes: Routes = [
     SellerProductsComponent,
     UpdateProductsComponent,
     HomeComponent,
+    RegisterComponent,
+    LoginUserComponent,
     
   ],
   imports: [

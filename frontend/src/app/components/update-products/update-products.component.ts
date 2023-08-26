@@ -5,6 +5,7 @@ import { Product } from 'src/app/common/product';
 import { ProductCategory } from 'src/app/common/product-category';
 import { ProductDTO } from 'src/app/common/product-dto';
 import { ProductService } from 'src/app/services/product.service';
+import { UserService } from 'src/app/services/user-service.service';
 import { ShopValidators } from 'src/app/validators/shop-validators';
 
 @Component({
@@ -16,16 +17,23 @@ export class UpdateProductsComponent {
 
   productFormGroup!:FormGroup;
   product: Product | null = null;
+  user:any;
 
   constructor(private formbuilder:FormBuilder,
               private productService:ProductService,
               private router:Router,
-              private route:ActivatedRoute ){}
+              private route:ActivatedRoute,
+              private userService:UserService ){}
   
   categories:ProductCategory[]=[];
   
   ngOnInit(): void {
 
+
+    this.userService.user$.subscribe(user => {
+      this.user = user;
+
+    });
 
     this.route.paramMap.subscribe(()=>{
       this.handleProductDetails();
@@ -134,7 +142,7 @@ export class UpdateProductsComponent {
     this.productService.updateProduct(productId,product).subscribe({
       next: response=>{
         alert(`Product updated successfully ${response}`)
-        this.router.navigateByUrl('/seller');
+        this.router.navigateByUrl(`/seller/${this.user.id}`);
       },
       
       error: err=>{

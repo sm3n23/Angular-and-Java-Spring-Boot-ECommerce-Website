@@ -8,5 +8,6 @@ export class ProductDTO {
     active!:boolean;
     categoryId!:number;
     imgUrl!:string;
+    userId!: number
 
 }

@@ -1,0 +1,9 @@
+.xzoom  {
+    transition: transform 0.3s ease-in-out;
+    width: 100%;
+    height: 100%;
+  }
+
+.xzoom img {
+    transform: scale(1.1); /* Adjust the scale factor to control the zoom level */
+  }

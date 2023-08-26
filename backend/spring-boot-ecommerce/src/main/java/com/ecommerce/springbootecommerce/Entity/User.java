@@ -1,11 +1,13 @@
 package com.ecommerce.springbootecommerce.Entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.HashSet;
 import java.util.Set;
 @Entity
 @Table(name = "users")
+@Data
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,13 +28,19 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    /*@OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private Set<Product> product;*/
+    @Column(nullable = false)
+    private String role;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private Set<Product> product;
 
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
+
+
+
+    /*@ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
     @JoinTable(name = "users-roles",joinColumns = @JoinColumn(name = "user_id",referencedColumnName = "id"),inverseJoinColumns = @JoinColumn(name = "role_id",referencedColumnName = "id"))
-    private Set<Role> roles;
+    private Set<Role> roles;*/
 
 
 

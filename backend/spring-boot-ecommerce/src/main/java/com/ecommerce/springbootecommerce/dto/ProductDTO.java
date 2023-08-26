@@ -15,4 +15,5 @@ public class ProductDTO {
     private String imgUrl;
     private boolean active;
     private int unitsInStock;
+    private Long userId;
 }

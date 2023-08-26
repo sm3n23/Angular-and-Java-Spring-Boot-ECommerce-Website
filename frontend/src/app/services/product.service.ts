@@ -11,7 +11,7 @@ import { ProductDTO } from '../common/product-dto';
 })
 export class ProductService {
 
-  private products: Product[] = []
+  
 
   private baseUrl = "http://localhost:8080/api/products";
   private categoryUrl = "http://localhost:8080/api/product_category";
@@ -53,6 +53,15 @@ export class ProductService {
     return this.httpClient.get<GetResponse>(pageUrl);
   }
 
+  getProductUserPaginate(thePage: number,
+    theSize: number,
+    userId: number): Observable<GetResponse> {
+
+    const pageUrl = `${this.baseUrl}/search/findByUserId?id=${userId}&page=${thePage}&size=${theSize}`;
+
+    return this.httpClient.get<GetResponse>(pageUrl);
+  }
+
   searchProductsPaginate(thePage: number,
     theSize: number,
     keyword: string): Observable<GetResponse> {
@@ -63,6 +72,7 @@ export class ProductService {
   }
 
 
+  
 
 
   getProductGategories() {

@@ -1,8 +1,10 @@
 package com.ecommerce.springbootecommerce.service;
 
 import com.ecommerce.springbootecommerce.Entity.Product;
+import com.ecommerce.springbootecommerce.Entity.User;
 import com.ecommerce.springbootecommerce.dao.ProductCategoryRepository;
 import com.ecommerce.springbootecommerce.dao.ProductRepository;
+import com.ecommerce.springbootecommerce.dao.UserRepository;
 import com.ecommerce.springbootecommerce.dto.ProductDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -21,6 +23,9 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductCategoryRepository productCategoryRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public Product createProduct(ProductDTO productDTO) {
         Product product = new Product();
@@ -32,6 +37,11 @@ public class ProductServiceImpl implements ProductService {
         product.setImgUrl(productDTO.getImgUrl());
         product.setActive(productDTO.isActive());
         product.setUnitsInStock(productDTO.getUnitsInStock());
+
+        User user = userRepository.getById(productDTO.getUserId());
+        if(user != null){
+            product.setUser(user);
+        }
         return productRepository.save(product);
     }
 

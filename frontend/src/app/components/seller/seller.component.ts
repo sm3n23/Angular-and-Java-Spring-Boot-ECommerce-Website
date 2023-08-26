@@ -5,6 +5,7 @@ import { Product } from 'src/app/common/product';
 import { ProductCategory } from 'src/app/common/product-category';
 import { ProductDTO } from 'src/app/common/product-dto';
 import { ProductService } from 'src/app/services/product.service';
+import { UserService } from 'src/app/services/user-service.service';
 import { ShopValidators } from 'src/app/validators/shop-validators';
 
 @Component({
@@ -14,15 +15,24 @@ import { ShopValidators } from 'src/app/validators/shop-validators';
 })
 export class SellerComponent implements OnInit {
 
+  user:any;
+
   productFormGroup!:FormGroup;
 
   constructor(private formbuilder:FormBuilder,
               private productService:ProductService,
-              private router:Router){}
+              private router:Router,
+              private userService:UserService){}
   
   categories:ProductCategory[]=[];
   
   ngOnInit(): void {
+
+
+    this.userService.user$.subscribe(user => {
+      this.user = user;
+
+    });
 
 
     this.listProductCategories();
@@ -78,31 +88,15 @@ export class SellerComponent implements OnInit {
     product.description = this.productFormGroup.value.description;
     product.unitPrice = this.productFormGroup.value.unitPrice;
     product.unitsInStock =this.productFormGroup.value.unitsInStock;
-
-    
-
     product.imgUrl = this.productFormGroup.value.imageUrl;
-
-    console.log(`umageUrl: ${product.imgUrl}`)
-
     product.categoryId= this.productFormGroup.value.categoryId.id;
-
-    
-    console.log(product);
-    
-    product.active=true; 
-
-
-
-    
-    
-
-  
+    product.active=true;
+    product.userId= this.user.id; 
 
     this.productService.createProduct(product).subscribe({
       next: response=>{
         alert(`Product created successfully ${response}`)
-        this.router.navigateByUrl('/seller');
+        this.router.navigateByUrl(`/seller/${this.user.id}`);
       },
       
       error: err=>{

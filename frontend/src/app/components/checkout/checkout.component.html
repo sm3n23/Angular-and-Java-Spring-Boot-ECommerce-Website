@@ -36,8 +36,8 @@
                                         <div *ngIf="email?.hasError('required')|| email?.hasError('notOnlyWhitespace')">
                                             email is required
                                         </div>
-                                        <div *ngIf="email?.hasError('minlength')">
-                                            email must be at least 2 characters long
+                                        <div *ngIf="email?.hasError('pattern')">
+                                            Please enter a valid email
                                         </div>
                                     </div>
                                 </div>

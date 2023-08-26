@@ -82,7 +82,7 @@ export class CheckoutComponent implements OnInit {
         firstName: new FormControl('', [Validators.required, Validators.minLength(2), ShopValidators.notOnlyWhitespace]),
         lastName: new FormControl('', [Validators.required, Validators.minLength(2), ShopValidators.notOnlyWhitespace]),
         email: new FormControl(theEmail,
-          [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$')])
+          [Validators.required,ShopValidators.notOnlyWhitespace, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$')])
 
       }),
       paymentMethode:this.formbuilder.group({
@@ -113,16 +113,16 @@ export class CheckoutComponent implements OnInit {
 
     })
 
-    //Years
+    //Months
+    
     const startMonth: number = new Date().getMonth();
     this.formSevice.getCreditCardMonths(startMonth).subscribe(
       data => {
-        this.creditCardMonths = data
+        this.creditCardMonths = data;
       }
     )
 
-    //Months
-
+    //Years
     this.formSevice.getCreditCardYears().subscribe(
       data => {
         this.creditCardYears = data;

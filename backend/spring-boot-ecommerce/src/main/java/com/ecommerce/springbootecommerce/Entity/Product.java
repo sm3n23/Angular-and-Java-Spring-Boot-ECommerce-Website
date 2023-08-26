@@ -55,9 +55,10 @@ public class Product {
     @UpdateTimestamp
     private Date lastUpdated;
 
-    /*@ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    private User user;*/
+    @JsonIgnore
+    private User user;
 
 
     /*@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)

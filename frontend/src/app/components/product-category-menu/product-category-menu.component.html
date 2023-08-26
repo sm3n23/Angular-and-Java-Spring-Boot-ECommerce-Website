@@ -16,7 +16,7 @@
 
 <div  class="container-fluid" >
   <div class="row border-top px-xl-5">
-    <div class="col-lg-3 ">
+    <div *ngIf="user?.role=='customer' || !user" class="col-lg-3 ">
 
       <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
         data-toggle="collapse" href="#navbar-vertical" style="height: 65px; margin-top: -1px; padding: 0 30px;">
@@ -29,7 +29,7 @@
         <div class="navbar-nav w-100 overflow-hidden"  >
 
           <div *ngFor="let productCategory of productCategories">
-            <a class="dropdown-item" routerLink="/category/{{productCategory.id}}" routerLinkActive="active-link">
+            <a class="dropdown-item" routerLink="category/{{productCategory.id}}" routerLinkActive="active-link">
               {{productCategory.categoryName}}
             </a>
           </div>
@@ -47,7 +47,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-          <div class="navbar-nav mr-auto py-0">
+          <div *ngIf="user?.role=='customer' || !user" class="navbar-nav mr-auto py-0">
             <a routerLink="/home" class="nav-item nav-link ">Home</a>
             <a routerLink="/products" class="nav-item nav-link">Shop</a>
             <a routerLink="/cart-details" class="nav-item nav-link">Shopping Cart</a>
@@ -62,9 +62,12 @@
             
           </div>
           <div class="navbar-nav ml-auto py-0">
-            <a routerLink="seller" class="nav-item nav-link">seller</a>
-            <a href="" class="nav-item nav-link">Login</a>
-            <a href="" class="nav-item nav-link">Register</a>
+            <div class="nav-item nav-link" *ngIf="user">welcome <strong>{{user.username}}</strong></div>
+            <a *ngIf="user?.role=='customer'" routerLink="/register/seller" class="nav-item nav-link">Become a seller</a> 
+            <a *ngIf="user?.role=='seller'" routerLink="seller/{{user.id}}" class="nav-item nav-link">Your Products</a> 
+            <a *ngIf="!user" routerLink="login" class="nav-item nav-link">Login</a>
+            <a *ngIf="!user" routerLink="/register/customer" class="nav-item nav-link">Register</a>
+            <button *ngIf="user" (click)="logOut()" routerLink="/home" class="nav-item nav-link">logOut</button>
           </div>
         </div>
       </nav>

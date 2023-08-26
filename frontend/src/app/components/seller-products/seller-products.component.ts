@@ -4,6 +4,7 @@ import { CartItem } from 'src/app/common/cart-item';
 import { Product } from 'src/app/common/product';
 import { CartService } from 'src/app/services/cart.service';
 import { ProductService } from 'src/app/services/product.service';
+import { UserService } from 'src/app/services/user-service.service';
 
 @Component({
   selector: 'app-seller-products',
@@ -18,6 +19,9 @@ export class SellerProductsComponent {
   searchMode: boolean = false;
   categoryMode:boolean=false;
 
+  sellerMode:boolean= false;
+  sellerId : number = 1;
+
   previousKeyword:string="";
 
   //page
@@ -26,11 +30,21 @@ export class SellerProductsComponent {
   theTotalElements:number=0;
 
 
+  user:any;
+
   constructor(private productService: ProductService,
               private cartService: CartService,
-              private route:ActivatedRoute ){ }
+              private route:ActivatedRoute,
+              private userService:UserService ){ }
 
   ngOnInit(): void {
+
+    this.userService.user$.subscribe(user => {
+      this.user = user;
+      console.log(`userId: ${user.id}`)
+
+    });
+
     this.route.paramMap.subscribe(()=>{
 
       this.listProducts();
@@ -43,19 +57,38 @@ export class SellerProductsComponent {
 
     this.searchMode = this.route.snapshot.paramMap.has('keyword');
     this.categoryMode=this.route.snapshot.paramMap.has('id');
+    this.sellerMode=this.route.snapshot.paramMap.has('sellerId');
 
-
-    if(this.searchMode){
-    this.handleSearchProducts();
-
-    }
-    if(this.categoryMode){
-      this.handleListProducts();
-    }
-    else{
-      this.handleHomeProducts();
+    if(this.sellerMode){
+      this.handleSellerProducts();
     }
 
+    
+
+  }
+  handleSellerProducts() {
+    const idParam = this.route.snapshot.paramMap.get('sellerId');
+    if (idParam !== null) {
+        this.sellerId = +idParam;
+    } else {
+        this.sellerId = 1;
+    }
+    
+    
+
+    console.log(`current Catergoty Id= ${this.sellerId}, the Page number =${this.thePageNumber}`)
+
+    this.productService.getProductUserPaginate(this.thePageNumber -1,
+                                                this.thePageSize,
+                                                this.sellerId)
+                                                .subscribe(
+                                                data => {
+                                                  this.products = data._embedded.products,
+                                                  this.thePageNumber= data.page.number +1,
+                                                  this.thePageSize=data.page.size,
+                                                  this.theTotalElements=data.page.totalElements;
+                                                }
+                                                );
   }
   handleSearchProducts() {
 
@@ -73,7 +106,7 @@ export class SellerProductsComponent {
                                                 this.thePageSize,
                                                 theKeyword).subscribe(
                                                   data => {
-                                                    this.products = data._embedded.products,
+                                                    this.products = data._embedded.products
                                                     this.thePageNumber= data.page.number +1,
                                                     this.thePageSize=data.page.size,
                                                     this.theTotalElements=data.page.totalElements;
@@ -169,7 +202,7 @@ export class SellerProductsComponent {
       }
     )}
 
-    this,this.listProducts();
+    this.listProducts();
   }
   
 

@@ -21,7 +21,7 @@
     
     
 
-    <div class="row px-xl-5">
+    <div class="row px-xl-5 ">
         <div class="col-lg-4">
             <div >
                 <div class="card product-item border-0 mb-4">
@@ -53,9 +53,11 @@
             
         </div>
         <div class="col-lg-8">
-            <div class="mb-4">
-                
-                <div class="row">
+            <div class="mb-4 ">
+                <div class="card-header bg-secondary border-0 mx-0">
+                    <h4 class="font-weight-semi-bold my-0 ">Edit Product</h4>
+                </div>
+                <div class="row m-3">
                     <div class="col-md-6 justify-content-center form-group">
                         <label>sku</label>
                         <input class="form-control" type="text" formControlName="sku" [value]="product?.sku">
@@ -142,7 +144,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-md-6 form-group">
+                    <div class="col-md-12 form-group">
                         <label>description</label>
                         <textarea rows="6" cols="50" class="form-control" type="text" formControlName="description" [value]="product?.description"></textarea>
                                 <div *ngIf="description?.invalid && (description?.dirty || description?.touched)"
